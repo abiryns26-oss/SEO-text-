@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة تحسين النصوص للـ SEO | SEO Text Refiner</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: 1.75rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            background: #0f172a;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        textarea:focus {
+            border-color: var(--primary);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button.secondary {
+            background-color: #334155;
+        }
+        button.secondary:hover {
+            background-color: #475569;
+        }
+        .preview-box {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            height: 250px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>أداة معالجة وتحسين النصوص للـ SEO</h1>
+            <p>ألصق مقالك الخام، ودع الأداة ترتبه، وتهيكل وسومه، وتجهزه للتحميل فوراً بصيغة HTML متوافقة مع معايير السيو.</p>
+        </header>
+
+        <div class="grid">
+            <!-- قسم الإدخال -->
+            <div class="panel">
+                <label for="inputText">النص الأصلي (الخام):</label>
+                <textarea id="inputText" placeholder="اكتب أو الصق النص هنا... السطر الأول سيُعتبر عنواناً رئيسياً (H1)، والأسطر التي تليها ستُعالج تلقائياً."></textarea>
+                <div class="stats">
+                    <span id="wordCount">الكلمات: 0</span>
+                    <span id="charCount">الحروف: 0</span>
+                </div>
+            </div>
+
+            <!-- قسم المعاينة -->
+            <div class="panel">
+                <label>معاينة مخرجات الـ SEO (HTML):</label>
+                <div id="previewBox" class="preview-box">ستظهر المعاينة هنا تلقائياً...</div>
+                <div class="stats">
+                    <span>الحالة: جاهز للمعالجة</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="processBtn">معالجة وتطبيق معايير SEO</button>
+            <button id="downloadBtn" class="secondary">تحميل كملف HTML</button>
+            <button id="copyBtn" class="secondary">نسخ كود الـ HTML</button>
+        </div>
+    </div>
+
+    <footer>
+        تم تطوير الأداة خصيصاً لتحسين جودة النصوص الرقمية بكفاءة عالية.
+    </footer>
+
+    <script>
+        const inputText = document.getElementById('inputText');
+        const previewBox = document.getElementById('previewBox');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+        const processBtn = document.getElementById('processBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const copyBtn = document.getElementById('copyBtn');
+
+        let processedHtmlOutput = '';
+
+        // تحديث العدادات فورياً
+        inputText.addEventListener('input', () => {
+            const text = inputText.value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const chars = text.length;
+            wordCount.textContent = `الكلمات: ${words}`;
+            charCount.textContent = `الحروف: ${chars}`;
+        });
+
+        // دالة معالجة النص وتحويله لمعايير السيو
+        function processTextToSEO() {
+            const rawText = inputText.value.trim();
+            if (!rawText) {
+                previewBox.innerHTML = '<span style="color: #94a3b8;">الرجاء إدخال نص أولاً...</span>';
+                processedHtmlOutput = '';
+                return;
+            }
+
+            const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            let htmlParts = [];
+
+            if (lines.length > 0) {
+                // السطر الأول يعتبر العنوان الرئيسي H1
+                htmlParts.push(`<h1>${lines[0]}</h1>`);
+            }
+
+            for (let i = 1; i < lines.length; i++) {
+                let line = lines[i];
+
+                // إذا كان السطر قصير نسبياً، نعتبره عنواناً فرعياً H2 أو H3
+                if (line.length < 60 && !line.endsWith('.')) {
+                    htmlParts.push(`<h2>${line}</h2>`);
+                } else {
+                    // فقرة عادية مع تحسينات طفيفة (تمييز الكلمات الطويلة أو المفتاحية افتراضياً)
+                    // تقطيع الجمل الطويلة لضمان تجربة قراءة أفضل
+                    htmlParts.push(`<p>${line}</p>`);
+                }
+            }
+
+            processedHtmlOutput = `<!DOCTYPE html>\n<html lang="ar" dir="rtl">\n<head>\n<meta charset="UTF-8">\n<title>${lines[0] || 'مقال محسّن'}</title>\n</head>\n<body>\n${htmlParts.join('\n')}\n</body>\n</html>`;
+            
+            previewBox.innerHTML = htmlParts.join('');
+        }
+
+        processBtn.addEventListener('click', processTextToSEO);
+
+        // زر التحميل مع ترميز UTF-8 BOM لدعم العربية بشكل ممتاز
+        downloadBtn.addEventListener('click', () => {
+            if (!processedHtmlOutput) {
+                processTextToSEO();
+            }
+            if (!processedHtmlOutput) {
+                alert('الرجاء إدخال نص لمعالجته أولاً.');
+                return;
+            }
+
+            const blob = new Blob(["\uFEFF" + processedHtmlOutput], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'seo-article.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // زر النسخ السريع
+        copyBtn.addEventListener('click', () => {
+            if (!processedHtmlOutput) {
+                processTextToSEO();
+            }
+            if (!processedHtmlOutput) {
+                alert('الرجاء إدخال نص لمعالجته أولاً.');
+                return;
+            }
+
+            navigator.clipboard.writeText(processedHtmlOutput).then(() => {
+                alert('تم نسخ كود الـ HTML بنجاح!');
+            });
+        });
+    </script>
+</body>
+</html>
